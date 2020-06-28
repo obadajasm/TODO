@@ -5,10 +5,11 @@ class Task {
   final bool isDone;
   final DateTime lastEdit;
 
-  Task(
-      {this.description,
-      this.id,
-      this.isDone = false,
-      this.title,
-      this.lastEdit});
+  Task({
+    this.description,
+    this.id,
+    this.isDone = false,
+    this.title,
+    this.lastEdit,
+  });
 }

@@ -15,17 +15,20 @@ class AuthProvider with ChangeNotifier {
   //sign in with google
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+    //get the credential
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
+//sign in with the credential we get
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     // save user id in sharedPrefrence
     SharedPrefUtil.getInstance().saveData('userid', user.uid);
+    //returen userid
     return user.uid;
   }
 
@@ -61,7 +64,9 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signOut(context) async {
     //sign out and delete userid
-    await _auth.signOut();
+    await _auth?.signOut();
+    await _googleSignIn?.signOut();
+    await fb?.logOut();
     SharedPrefUtil.getInstance().deleteDataByKey('userid');
     Navigator.of(context).pushReplacementNamed(AuthScreen.ROUTE_NAME);
   }

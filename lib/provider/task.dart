@@ -6,6 +6,8 @@ import 'package:todo/sharedpref.dart';
 class TaskProvider with ChangeNotifier {
   List<Task> _tasks = [];
   String currentUserid = '';
+  final String collectionUser = 'users';
+  final String collectionTasks = 'tasks';
 
   List<Task> get tasks {
     return [..._tasks];
@@ -16,9 +18,9 @@ class TaskProvider with ChangeNotifier {
     try {
       _tasks.clear();
       QuerySnapshot res = await Firestore.instance
-          .collection('users')
+          .collection(collectionUser)
           .document(currentUserid)
-          .collection('tasks')
+          .collection(collectionTasks)
           .getDocuments();
 
       if (res.documents.length != _tasks.length) {
@@ -30,7 +32,6 @@ class TaskProvider with ChangeNotifier {
               lastEdit: lastEdit.toDate(),
               description: element.data['description'],
               isDone: element.data['isDone']);
-          print(task.id);
           _tasks.add(task);
         });
       }
@@ -52,9 +53,9 @@ class TaskProvider with ChangeNotifier {
         );
         _tasks.add(task);
         await Firestore.instance
-            .collection('users')
+            .collection(collectionUser)
             .document(currentUserid)
-            .collection('tasks')
+            .collection(collectionTasks)
             .document()
             .setData({
           'title': task.title,
@@ -76,9 +77,9 @@ class TaskProvider with ChangeNotifier {
     _tasks.remove(t);
     try {
       await Firestore.instance
-          .collection('users')
+          .collection(collectionUser)
           .document(currentUserid)
-          .collection('tasks')
+          .collection(collectionTasks)
           .document(t.id)
           .setData(
         {
@@ -100,9 +101,9 @@ class TaskProvider with ChangeNotifier {
 
     try {
       await Firestore.instance
-          .collection('users')
+          .collection(collectionUser)
           .document(currentUserid)
-          .collection("tasks")
+          .collection(collectionTasks)
           .document(id)
           .delete();
     } catch (e) {
@@ -116,9 +117,9 @@ class TaskProvider with ChangeNotifier {
 
     try {
       await Firestore.instance
-          .collection('users')
+          .collection(collectionUser)
           .document(currentUserid)
-          .collection("tasks")
+          .collection(collectionTasks)
           .document(t.id)
           .setData({
         'title': t.title,

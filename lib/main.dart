@@ -8,10 +8,12 @@ import 'package:todo/screens/home_screen.dart';
 import 'package:todo/sharedpref.dart';
 
 Future<void> main() async {
-  // if your flutter > 1.7.8 :  ensure flutter activated
+  //  ensure flutter activated
   WidgetsFlutterBinding.ensureInitialized();
+  // init shared preferences
   await SharedPrefUtil.init();
   runApp(
+    // provide provider down the tree
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TaskProvider()),
@@ -29,16 +31,16 @@ class MyApp extends StatelessWidget {
     ThemeProvider themeProvider = Provider.of(context);
     return MaterialApp(
       title: 'todo Demo',
-      // set the theme depneding on last user choice
+      //toogle theme
       theme: themeProvider.currentThemeData,
+
       // if user allready signed in
       //redirect to homeScreen
-      home: SharedPrefUtil.getInstance().getData('userid').isEmpty
-          ? AuthScreen()
-          : MyHomePage(),
       // defiens the named routes
-
       routes: {
+        '/': (ctx) => SharedPrefUtil.getInstance().getData('userid').isEmpty
+            ? AuthScreen()
+            : MyHomePage(),
         MyHomePage.ROUTE_NAME: (ctx) => MyHomePage(),
         AuthScreen.ROUTE_NAME: (ctx) => AuthScreen(),
       },

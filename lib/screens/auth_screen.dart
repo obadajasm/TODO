@@ -30,7 +30,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('build AuthScreen');
     return Scaffold(
       body: SafeArea(
         child: Center(

@@ -53,15 +53,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       // future builder to await the getTasks futures
       body: FutureBuilder(
+        // get the tasks
         future: _taskProvider.getTasks(),
+        // builder method
         builder: (ctx, data) {
           return data.connectionState == ConnectionState.done
+              // only if connection is done => build the list of todos
               ? ListView.builder(
                   itemCount: _taskProvider?.tasks?.length ?? 0,
                   itemBuilder: (ctx, index) {
-                    Task _currentTask = _taskProvider.tasks[index];
-                    return _buildTodoItem(_currentTask, context);
+                    return _buildTodoItem(_taskProvider.tasks[index], context);
                   })
+              // show progressIndeicator while downloading
               : Center(child: CircularProgressIndicator());
         },
       ),
@@ -69,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Container _buildTodoItem(Task _currentTask, BuildContext context) {
+  Widget _buildTodoItem(Task _currentTask, BuildContext context) {
     return Container(
       color: _currentTask.isDone
           ? Theme.of(context).primaryColor
@@ -88,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // one tap to toogle the todo is done or not
             _taskProvider.toogleIsDone(_currentTask);
           },
+          // on long press to edit this todo
           onLongPress: () {
             showTaskAdminDialog(
               title: _currentTask.title,
@@ -107,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+          // add chech icon if the todo is done.
           trailing: _currentTask.isDone ? Icon(Icons.check) : SizedBox(),
         ),
       ),
